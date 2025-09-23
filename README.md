@@ -1,5 +1,5 @@
 
-# SMS（Student Management System的缩写）
+# GVP
 
 ## 内置功能
 
