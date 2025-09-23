@@ -12,35 +12,42 @@ import java.io.Serializable;
 
 /**
  * @Author 范佳兴
- * @date 2025/9/23 11:38
+ * @date 2025/9/23 16:37
  */
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-@TableName("gvp_hospital")
-public class Hospital implements Serializable {
-
+@TableName("gvp_drug")
+public class Drug implements Serializable {
     /**
-     * 主键，医院ID
+     * 主键，药品ID
      */
     @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
-     * 医院名称
+     * 药品名称
      */
-    private String name;
+    private String drugName;
 
     /**
-     * 医院地址
+     * 药品描述
      */
-    private String address;
+    private String description;
 
     /**
-     * 联系方式
+     * 药品适应症
      */
-    private String contact;
+    private String indications;
 
+    /**
+     * 药品注意事项
+     */
+    private String precautions;
+
+    /**
+     * 序列化版本UID
+     */
     private static final long serialVersionUID = 1L;
 }
