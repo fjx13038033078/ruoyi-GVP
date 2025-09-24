@@ -30,6 +30,7 @@
         SELECT id, drug_id, content, version, update_time
         FROM gvp_drug_instruction
         WHERE drug_id = #{drugId}
+        ORDER BY update_time DESC
     </select>
 
     <!-- 添加说明书 -->
