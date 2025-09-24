@@ -197,7 +197,7 @@ export default {
               left: 'center',
               top: 'center',
               style: {
-                text: '药品不良信息管理系统',
+                text: 'GVP信息收集系统',
                 fontSize: 80,
                 fontWeight: 'bold',
                 lineDash: [0, 200],
