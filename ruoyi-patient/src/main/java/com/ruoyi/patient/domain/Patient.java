@@ -27,9 +27,6 @@ public class Patient implements Serializable {
     /** 关联用户ID(小程序端) */
     private Long userId;
 
-    /** 所属医院ID */
-    private Long hospitalId;
-
     /** 负责医生ID */
     private Long doctorId;
 

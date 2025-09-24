@@ -37,6 +37,20 @@ public interface ISysUserService
     public List<SysUser> selectStudentList(SysUser user);
 
     /**
+     * 查询所有教师
+     *
+     * @return 结果
+     */
+    public List<SysUser> selectPatientList(SysUser user);
+
+    /**
+     * 查询所有教师
+     *
+     * @return 结果
+     */
+    public List<SysUser> selectDoctorList(SysUser user);
+
+    /**
      * 根据条件分页查询已分配用户角色列表
      * 
      * @param user 用户信息

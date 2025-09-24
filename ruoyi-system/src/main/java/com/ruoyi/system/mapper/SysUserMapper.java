@@ -53,6 +53,22 @@ public interface SysUserMapper
     public List<SysUser> selectStudentList(SysUser sysUser);
 
     /**
+     * 根据条件分页查询用户列表
+     *
+     * @param sysUser 用户信息
+     * @return 用户信息集合信息
+     */
+    public List<SysUser> selectPatientList(SysUser sysUser);
+
+    /**
+     * 根据条件分页查询用户列表
+     *
+     * @param sysUser 用户信息
+     * @return 用户信息集合信息
+     */
+    public List<SysUser> selectDoctorList(SysUser sysUser);
+
+    /**
      * 根据条件分页查询已配用户角色列表
      * 
      * @param user 用户信息

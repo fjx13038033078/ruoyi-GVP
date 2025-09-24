@@ -7,7 +7,6 @@
     <resultMap id="PatientResultMap" type="com.ruoyi.patient.domain.Patient">
         <id property="id" column="id"/>
         <result property="userId" column="user_id"/>
-        <result property="hospitalId" column="hospital_id"/>
         <result property="doctorId" column="doctor_id"/>
         <result property="medicalRecordNo" column="medical_record_no"/>
         <result property="age" column="age"/>
@@ -25,17 +24,26 @@
         SELECT * FROM gvp_patient WHERE id = #{id}
     </select>
 
+    <!-- 根据user_id获取患者 -->
+    <select id="selectByUserId" parameterType="Long" resultMap="PatientResultMap">
+        SELECT * FROM gvp_patient WHERE user_id = #{userId}
+    </select>
+
+    <!-- 根据doctor_id获取患者 -->
+    <select id="selectByDoctorId" parameterType="Long" resultMap="PatientResultMap">
+        SELECT * FROM gvp_patient WHERE doctor_id = #{doctorId}
+    </select>
+
     <!-- 添加患者 -->
     <insert id="insert" parameterType="com.ruoyi.patient.domain.Patient" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO gvp_patient (user_id, hospital_id, doctor_id, medical_record_no, age, gender, history)
-        VALUES (#{userId}, #{hospitalId}, #{doctorId}, #{medicalRecordNo}, #{age}, #{gender}, #{history})
+        INSERT INTO gvp_patient (user_id, doctor_id, medical_record_no, age, gender, history)
+        VALUES (#{userId}, #{doctorId}, #{medicalRecordNo}, #{age}, #{gender}, #{history})
     </insert>
 
     <!-- 更新患者 -->
     <update id="update" parameterType="com.ruoyi.patient.domain.Patient">
         UPDATE gvp_patient
         SET user_id = #{userId},
-            hospital_id = #{hospitalId},
             doctor_id = #{doctorId},
             medical_record_no = #{medicalRecordNo},
             age = #{age},

@@ -46,6 +46,24 @@ export function listStudent(query) {
   })
 }
 
+// 查询用户列表
+export function patientList(query) {
+  return request({
+    url: '/system/user/patientList',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询用户列表
+export function doctorList(query) {
+  return request({
+    url: '/system/user/doctorList',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询用户详细
 export function getUser(userId) {
   return request({

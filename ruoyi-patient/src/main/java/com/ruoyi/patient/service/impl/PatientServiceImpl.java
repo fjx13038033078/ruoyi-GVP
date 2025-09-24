@@ -1,13 +1,19 @@
 package com.ruoyi.patient.service.impl;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.patient.domain.Patient;
 import com.ruoyi.patient.mapper.PatientMapper;
 import com.ruoyi.patient.service.PatientService;
+import com.ruoyi.system.service.ISysRoleService;
+import com.ruoyi.system.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.ruoyi.common.utils.PageUtils.startPage;
 
 /**
  * @Author 范佳兴
@@ -17,13 +23,37 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PatientServiceImpl implements PatientService {
+
     private final PatientMapper patientMapper;
+
+    private final ISysRoleService iSysRoleService;
+
+    private final ISysUserService iSysUserService;
 
     @Override
     public List<Patient> getAllPatients() {
-        List<Patient> patients = patientMapper.selectAll();
-        fillExtraInfo(patients);
-        return patients;
+        Long userId = SecurityUtils.getUserId();
+        String role = iSysRoleService.selectStringRoleByUserId(userId);
+        if (role.equalsIgnoreCase("admin") ) {
+            startPage();
+            List<Patient> patients = patientMapper.selectAll();
+            fillExtraInfo(patients);
+            return patients;
+        } else if (role.equalsIgnoreCase("doctor")){
+            startPage();
+            List<Patient> patients = patientMapper.selectByDoctorId(userId);
+            fillExtraInfo(patients);
+            return patients;
+        } else {
+            startPage();
+            Patient patient = patientMapper.selectByUserId(userId);
+            fillExtraInfo(patient);
+            List<Patient> result = new ArrayList<>();
+            if (patient != null) {
+                result.add(patient);
+            }
+            return result;
+        }
     }
 
     @Override

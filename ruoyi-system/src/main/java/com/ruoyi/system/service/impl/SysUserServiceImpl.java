@@ -117,6 +117,18 @@ public class SysUserServiceImpl implements ISysUserService
         return userMapper.selectStudentList(user);
     }
 
+    @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
+    public List<SysUser> selectPatientList(SysUser user) {
+        return userMapper.selectPatientList(user);
+    }
+
+    @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
+    public List<SysUser> selectDoctorList(SysUser user) {
+        return userMapper.selectDoctorList(user);
+    }
+
     /**
      * 根据条件分页查询已分配用户角色列表
      * 

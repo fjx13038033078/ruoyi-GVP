@@ -27,6 +27,20 @@ public interface PatientMapper {
     Patient selectById(Long id);
 
     /**
+     * 根据user_id获取患者
+     *
+     * @return 患者列表
+     */
+    Patient selectByUserId(Long userId);
+
+    /**
+     * 根据doctor_id获取患者
+     *
+     * @return 患者列表
+     */
+    List<Patient> selectByDoctorId(Long doctorId);
+
+    /**
      * 添加患者
      *
      * @param patient 待添加的患者
