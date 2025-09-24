@@ -1,8 +1,10 @@
 package com.ruoyi.patient.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -35,9 +37,21 @@ public class MedicationRecord implements Serializable {
     private Long patientId;
 
     /**
+     * 患者姓名
+     */
+    @TableField(exist = false)
+    private String patientName;
+
+    /**
      * 药品ID
      */
     private Long drugId;
+
+    /**
+     * 药品名称
+     */
+    @TableField(exist = false)
+    private String drugName;
 
     /**
      * 剂量
@@ -52,11 +66,13 @@ public class MedicationRecord implements Serializable {
     /**
      * 开始日期
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
 
     /**
      * 结束日期
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     /**

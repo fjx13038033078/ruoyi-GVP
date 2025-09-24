@@ -1,5 +1,6 @@
 package com.ruoyi.patient.service.impl;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.patient.domain.Patient;
 import com.ruoyi.patient.mapper.PatientMapper;
@@ -102,7 +103,9 @@ public class PatientServiceImpl implements PatientService {
             return;
         }
         // TODO: 可调用 hospitalService / doctorService 填充医院名、医生姓名
-        // 示例：patient.setHospitalName(hospitalService.getNameById(patient.getHospitalId()));
-        // 示例：patient.setDoctorName(doctorService.getNameById(patient.getDoctorId()));
+        SysUser sysUser = iSysUserService.selectUserById(patient.getUserId());
+        patient.setPatientName(sysUser.getNickName());
+        SysUser sysUser1 = iSysUserService.selectUserById(patient.getDoctorId());
+        patient.setDoctorName(sysUser1.getNickName());
     }
 }

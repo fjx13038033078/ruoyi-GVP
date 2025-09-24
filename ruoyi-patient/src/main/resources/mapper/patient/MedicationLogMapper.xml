@@ -29,6 +29,7 @@
         SELECT id, record_id, take_time, is_taken
         FROM gvp_medication_log
         WHERE record_id = #{recordId}
+        ORDER BY take_time DESC
     </select>
 
     <!-- 添加服药打卡记录 -->

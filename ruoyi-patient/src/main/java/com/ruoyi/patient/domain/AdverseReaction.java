@@ -1,6 +1,7 @@
 package com.ruoyi.patient.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
@@ -36,6 +37,18 @@ public class AdverseReaction implements Serializable {
      * 药品ID
      */
     private Long drugId;
+
+    /**
+     * 患者姓名
+     */
+    @TableField(exist = false)
+    private String patientName;
+
+    /**
+     * 药品名称
+     */
+    @TableField(exist = false)
+    private String drugName;
 
     /**
      * 反应描述

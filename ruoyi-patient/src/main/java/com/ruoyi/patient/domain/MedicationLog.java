@@ -3,6 +3,7 @@ package com.ruoyi.patient.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -35,6 +36,7 @@ public class MedicationLog implements Serializable {
     /**
      * 服药时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date takeTime;
 
     /**
