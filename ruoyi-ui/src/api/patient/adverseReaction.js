@@ -54,6 +54,15 @@ export function updateAdverseReaction(data) {
   })
 }
 
+// 更新医生审核结果
+export function updateDoctorConfirmed(data) {
+  return request({
+    url: '/adverseReaction/updateDoctorConfirmed',
+    method: 'post',
+    data: data
+  })
+}
+
 // 删除不良反应记录
 export function deleteAdverseReaction(reactionId) {
   return request({

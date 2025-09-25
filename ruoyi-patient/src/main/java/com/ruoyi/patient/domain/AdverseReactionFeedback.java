@@ -1,6 +1,7 @@
 package com.ruoyi.patient.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
@@ -39,9 +40,10 @@ public class AdverseReactionFeedback implements Serializable {
     private Long doctorId;
 
     /**
-     * 药厂ID
+     * 医生姓名
      */
-    private Long pharmaId;
+    @TableField(exist = false)
+    private String doctorName;
 
     /**
      * 反馈内容

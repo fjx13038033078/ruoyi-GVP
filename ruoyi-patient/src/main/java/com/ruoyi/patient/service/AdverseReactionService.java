@@ -60,6 +60,14 @@ public interface AdverseReactionService {
     boolean updateAdverseReaction(AdverseReaction adverseReaction);
 
     /**
+     * 更新医生确认状态
+     *
+     * @param adverseReaction 待更新的不良反应
+     * @return 确认成功返回 true，否则返回 false
+     */
+    boolean updateDoctorConfirmed(AdverseReaction adverseReaction);
+
+    /**
      * 删除不良反应记录
      *
      * @param id 不良反应ID

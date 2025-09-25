@@ -10,7 +10,7 @@
                      icon="el-icon-plus"
                      size="medium"
                      @click="handleAddMedicationRecord"
-                     v-hasPermi="['patient:medicationRecord:add']">新增用药记录
+                     v-hasPermi="['drug:medicationRecord:add']">新增用药记录
           </el-button>
         </el-col>
       </el-row>
@@ -55,16 +55,16 @@
         <el-table-column label="操作" align="center" width="280px">
           <template slot-scope="scope">
             <el-button type="text" icon="el-icon-view" size="mini" @click="handleView(scope.row)"
-                       v-hasPermi="['patient:medicationRecord:view']">查看
+                       v-hasPermi="['drug:medicationRecord:view']">查看
             </el-button>
             <el-button type="text" icon="el-icon-edit" size="mini" @click="handleEdit(scope.row)"
-                       v-hasPermi="['patient:medicationRecord:edit']">编辑
+                       v-hasPermi="['drug:medicationRecord:edit']">编辑
             </el-button>
             <el-button type="text" icon="el-icon-time" size="mini" @click="handleViewMedicationLogs(scope.row)"
-                       v-hasPermi="['patient:medicationLog:view']">服药打卡
+                       v-hasPermi="['drug:medicationLog:view']">服药打卡
             </el-button>
             <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)"
-                       v-hasPermi="['patient:medicationRecord:delete']">删除
+                       v-hasPermi="['drug:medicationRecord:delete']">删除
             </el-button>
           </template>
         </el-table-column>
@@ -151,10 +151,10 @@
       <!-- 打卡记录操作按钮 -->
       <div style="margin-bottom: 15px;">
         <el-button type="primary" size="small" @click="handleAddLog"
-                   v-hasPermi="['patient:medicationLog:add']">新增打卡记录
+                   v-hasPermi="['drug:medicationLog:add']">新增打卡记录
         </el-button>
       </div>
-      
+
       <!-- 打卡记录列表 -->
       <el-table :data="medicationLogList" v-loading="logLoading" style="width: 100%" border>
         <el-table-column label="打卡ID" prop="id" align="center" width="80"></el-table-column>
@@ -180,10 +180,10 @@
           <template slot-scope="scope">
             <el-button type="text" icon="el-icon-view" size="mini" @click="handleViewLog(scope.row)">查看</el-button>
             <el-button type="text" icon="el-icon-edit" size="mini" @click="handleEditLog(scope.row)"
-                       v-hasPermi="['patient:medicationLog:edit']">编辑
+                       v-hasPermi="['drug:medicationLog:edit']">编辑
             </el-button>
             <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDeleteLog(scope.row)"
-                       v-hasPermi="['patient:medicationLog:delete']">删除
+                       v-hasPermi="['drug:medicationLog:delete']">删除
             </el-button>
           </template>
         </el-table-column>
@@ -223,10 +223,10 @@
 
 <script>
 import {
-  listAllMedicationRecords, 
-  addMedicationRecord, 
-  updateMedicationRecord, 
-  deleteMedicationRecord, 
+  listAllMedicationRecords,
+  addMedicationRecord,
+  updateMedicationRecord,
+  deleteMedicationRecord,
   getMedicationRecordById
 } from '@/api/patient/medicationRecord'
 import {
@@ -492,7 +492,7 @@ export default {
           // 如果response本身就是单个对象，转换为数组
           logData = [response]
         }
-        
+
         this.medicationLogList = logData
         console.log('打卡记录列表数据:', this.medicationLogList)
         this.logLoading = false

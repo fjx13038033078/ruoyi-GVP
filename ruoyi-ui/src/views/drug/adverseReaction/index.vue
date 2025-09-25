@@ -48,13 +48,17 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="210px">
+        <el-table-column label="操作" align="center" width="280px">
           <template slot-scope="scope">
             <el-button type="text" icon="el-icon-view" size="mini" @click="handleView(scope.row)"
                        v-hasPermi="['drug:adverseReaction:view']">查看
             </el-button>
             <el-button type="text" icon="el-icon-edit" size="mini" @click="handleEdit(scope.row)"
                        v-hasPermi="['drug:adverseReaction:edit']">编辑
+            </el-button>
+            <el-button type="text" icon="el-icon-check" size="mini" @click="handleDoctorConfirm(scope.row)"
+                       v-hasPermi="['drug:adverseReaction:confirm']"
+                       v-if="scope.row.doctorConfirmed === 0">医生确认
             </el-button>
             <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)"
                        v-hasPermi="['drug:adverseReaction:delete']">删除
@@ -99,7 +103,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="反应描述" prop="description">
-            <el-input v-model="adverseReactionForm.description" :disabled="isReadOnly" type="textarea" 
+            <el-input v-model="adverseReactionForm.description" :disabled="isReadOnly" type="textarea"
                       :rows="4" placeholder="请详细描述不良反应症状"></el-input>
           </el-form-item>
           <el-form-item label="严重程度" prop="severity">
@@ -119,11 +123,10 @@
               value-format="yyyy-MM-dd HH:mm:ss">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="医生确认" prop="doctorConfirmed">
-            <el-select v-model="adverseReactionForm.doctorConfirmed" :disabled="isReadOnly" placeholder="请选择确认状态">
-              <el-option label="待确认" :value="0"></el-option>
-              <el-option label="已确认" :value="1"></el-option>
-            </el-select>
+          <el-form-item label="医生确认" v-if="isReadOnly">
+            <el-tag :type="adverseReactionForm.doctorConfirmed === 1 ? 'success' : 'warning'">
+              {{ adverseReactionForm.doctorConfirmed === 1 ? '已确认' : '待确认' }}
+            </el-tag>
           </el-form-item>
         </el-form>
       </div>
@@ -138,11 +141,12 @@
 
 <script>
 import {
-  listAllAdverseReactions, 
-  addAdverseReaction, 
-  updateAdverseReaction, 
-  deleteAdverseReaction, 
-  getAdverseReactionById
+  listAllAdverseReactions,
+  addAdverseReaction,
+  updateAdverseReaction,
+  deleteAdverseReaction,
+  getAdverseReactionById,
+  updateDoctorConfirmed
 } from '@/api/patient/adverseReaction'
 import {listAllPatients} from '@/api/patient/patient'
 import {listAllDrugs} from '@/api/patient/drug'
@@ -165,8 +169,7 @@ export default {
         drugId: null,
         description: '',
         severity: '',
-        occurTime: '',
-        doctorConfirmed: 0
+        occurTime: ''
       },
       // 表单验证规则
       formRules: {
@@ -186,9 +189,6 @@ export default {
         ],
         occurTime: [
           { required: true, message: '请选择发生时间', trigger: 'change' }
-        ],
-        doctorConfirmed: [
-          { required: true, message: '请选择确认状态', trigger: 'change' }
         ]
       },
       // 查询参数
@@ -217,7 +217,7 @@ export default {
     fetchPatientOptions() {
       listAllPatients({pageNum: 1, pageSize: 1000}).then(response => {
         this.patientOptions = response.rows.map(patient => ({
-          id: patient.id,
+          id: patient.userId,
           patientName: patient.patientName || `患者${patient.id}`,
           medicalRecordNo: patient.medicalRecordNo
         }))
@@ -283,6 +283,27 @@ export default {
         })
       })
     },
+    handleDoctorConfirm(row) {
+      const patientName = this.getPatientName(row.patientId)
+      const drugName = this.getDrugName(row.drugId)
+      this.$confirm(`确认要确认患者"${patientName}"使用"${drugName}"的不良反应记录吗？确认后将无法撤销。`, '医生确认', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const confirmData = {
+          id: row.id,
+          doctorConfirmed: 1
+        }
+        updateDoctorConfirmed(confirmData).then(() => {
+          this.$message.success('医生确认成功')
+          this.fetchAdverseReactions()
+        }).catch(error => {
+          console.error('医生确认失败:', error)
+          this.$message.error('医生确认失败，请重试')
+        })
+      })
+    },
     handleCloseDialog() {
       this.dialogVisible = false
       this.clearForm()
@@ -298,8 +319,7 @@ export default {
         drugId: null,
         description: '',
         severity: '',
-        occurTime: '',
-        doctorConfirmed: 0
+        occurTime: ''
       }
     },
     handleSubmit() {

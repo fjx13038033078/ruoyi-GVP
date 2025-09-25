@@ -59,6 +59,13 @@ public interface AdverseReactionMapper {
     int updateAdverseReaction(AdverseReaction adverseReaction);
 
     /**
+     * 修改 doctor_confirmed字段
+     * @param adverseReaction
+     * @return
+     */
+    int updateAdverseReactionConfirm(AdverseReaction adverseReaction);
+
+    /**
      * 删除不良反应记录
      *
      * @param id 不良反应ID

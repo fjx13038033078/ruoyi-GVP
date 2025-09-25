@@ -56,6 +56,7 @@ public class AdverseReactionServiceImpl  implements AdverseReactionService {
 
     @Override
     public boolean addAdverseReaction(AdverseReaction adverseReaction) {
+        adverseReaction.setDoctorConfirmed(0);
         int rows = adverseReactionMapper.addAdverseReaction(adverseReaction);
         return rows > 0;
     }
@@ -63,6 +64,12 @@ public class AdverseReactionServiceImpl  implements AdverseReactionService {
     @Override
     public boolean updateAdverseReaction(AdverseReaction adverseReaction) {
         int rows = adverseReactionMapper.updateAdverseReaction(adverseReaction);
+        return rows > 0;
+    }
+
+    @Override
+    public boolean updateDoctorConfirmed(AdverseReaction adverseReaction) {
+        int rows = adverseReactionMapper.updateAdverseReactionConfirm(adverseReaction);
         return rows > 0;
     }
 

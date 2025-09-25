@@ -59,6 +59,12 @@
         WHERE id = #{id}
     </update>
 
+    <update id="updateAdverseReactionConfirm" parameterType="com.ruoyi.patient.domain.AdverseReaction">
+        UPDATE gvp_adverse_reaction
+        SET doctor_confirmed = #{doctorConfirmed}
+        WHERE id = #{id}
+    </update>
+
     <!-- 删除不良反应记录 -->
     <delete id="deleteAdverseReaction" parameterType="Long">
         DELETE FROM gvp_adverse_reaction WHERE id = #{id}

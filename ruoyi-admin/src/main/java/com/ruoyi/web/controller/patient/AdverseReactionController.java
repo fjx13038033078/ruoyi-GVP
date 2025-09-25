@@ -62,6 +62,12 @@ public class AdverseReactionController extends BaseController {
         return toAjax(adverseReactionService.updateAdverseReaction(adverseReaction));
     }
 
+    //修改医生确认状态
+    @PostMapping("/updateDoctorConfirmed")
+    public AjaxResult updateDoctorConfirmed(@RequestBody AdverseReaction adverseReaction) {
+        return toAjax(adverseReactionService.updateDoctorConfirmed(adverseReaction));
+    }
+
     // 删除不良反应记录
     @GetMapping("/delete")
     public AjaxResult deleteAdverseReaction(@RequestParam Long id) {

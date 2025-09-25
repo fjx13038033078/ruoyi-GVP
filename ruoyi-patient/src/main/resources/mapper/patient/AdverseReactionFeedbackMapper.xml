@@ -8,35 +8,34 @@
         <id property="id" column="id"/>
         <result property="reactionId" column="reaction_id"/>
         <result property="doctorId" column="doctor_id"/>
-        <result property="pharmaId" column="pharma_id"/>
         <result property="feedbackContent" column="feedback_content"/>
         <result property="createTime" column="create_time"/>
     </resultMap>
 
     <!-- 获取所有反馈记录 -->
     <select id="getAllFeedbacks" resultMap="AdverseReactionFeedbackResult">
-        SELECT id, reaction_id, doctor_id, pharma_id, feedback_content, create_time
+        SELECT id, reaction_id, doctor_id, feedback_content, create_time
         FROM gvp_adverse_reaction_feedback
     </select>
 
     <!-- 根据反馈ID获取信息 -->
     <select id="getFeedbackById" parameterType="Long" resultMap="AdverseReactionFeedbackResult">
-        SELECT id, reaction_id, doctor_id, pharma_id, feedback_content, create_time
+        SELECT id, reaction_id, doctor_id, feedback_content, create_time
         FROM gvp_adverse_reaction_feedback
         WHERE id = #{id}
     </select>
 
     <!-- 根据不良反应ID获取反馈列表 -->
     <select id="getFeedbacksByReactionId" parameterType="Long" resultMap="AdverseReactionFeedbackResult">
-        SELECT id, reaction_id, doctor_id, pharma_id, feedback_content, create_time
+        SELECT id, reaction_id, doctor_id, feedback_content, create_time
         FROM gvp_adverse_reaction_feedback
         WHERE reaction_id = #{reactionId}
     </select>
 
     <!-- 添加反馈记录 -->
     <insert id="addFeedback" parameterType="com.ruoyi.patient.domain.AdverseReactionFeedback" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO gvp_adverse_reaction_feedback (reaction_id, doctor_id, pharma_id, feedback_content, create_time)
-        VALUES (#{reactionId}, #{doctorId}, #{pharmaId}, #{feedbackContent}, #{createTime})
+        INSERT INTO gvp_adverse_reaction_feedback (reaction_id, doctor_id, feedback_content, create_time)
+        VALUES (#{reactionId}, #{doctorId}, #{feedbackContent}, #{createTime})
     </insert>
 
     <!-- 更新反馈记录 -->
@@ -44,7 +43,6 @@
         UPDATE gvp_adverse_reaction_feedback
         SET reaction_id = #{reactionId},
             doctor_id = #{doctorId},
-            pharma_id = #{pharmaId},
             feedback_content = #{feedbackContent},
             create_time = #{createTime}
         WHERE id = #{id}
