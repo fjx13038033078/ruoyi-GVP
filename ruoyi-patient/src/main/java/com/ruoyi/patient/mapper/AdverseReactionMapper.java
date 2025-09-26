@@ -43,6 +43,14 @@ public interface AdverseReactionMapper {
     List<AdverseReaction> getAdverseReactionsByDrugId(Long drugId);
 
     /**
+     * 根据医生ID获取不良反应列表
+     *
+     * @param doctorId 医生ID
+     * @return 不良反应列表
+     */
+    List<AdverseReaction> getAdverseReactionsByDoctorId(Long doctorId);
+
+    /**
      * 添加不良反应记录
      *
      * @param adverseReaction 待添加的不良反应

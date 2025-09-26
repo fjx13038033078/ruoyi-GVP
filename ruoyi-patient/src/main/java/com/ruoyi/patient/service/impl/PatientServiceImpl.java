@@ -65,6 +65,13 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public Patient getPatientByUserId(Long userId) {
+        Patient patient = patientMapper.selectByUserId(userId);
+        fillExtraInfo(patient);
+        return patient;
+    }
+
+    @Override
     public boolean addPatient(Patient patient) {
         int rows = patientMapper.insert(patient);
         return rows > 0;

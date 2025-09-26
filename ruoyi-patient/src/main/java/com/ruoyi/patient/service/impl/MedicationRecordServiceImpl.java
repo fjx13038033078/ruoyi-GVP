@@ -1,10 +1,12 @@
 package com.ruoyi.patient.service.impl;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.patient.domain.Drug;
 import com.ruoyi.patient.domain.MedicationRecord;
 import com.ruoyi.patient.mapper.MedicationRecordMapper;
 import com.ruoyi.patient.service.DrugService;
 import com.ruoyi.patient.service.MedicationRecordService;
+import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,8 @@ public class MedicationRecordServiceImpl implements MedicationRecordService {
 
     private final ISysUserService sysUserService;
 
+    private final ISysRoleService iSysRoleService;
+
     /**
      * 获取所有用药记录
      *
@@ -34,9 +38,17 @@ public class MedicationRecordServiceImpl implements MedicationRecordService {
      */
     @Override
     public List<MedicationRecord> getAllMedicationRecords() {
-        List<MedicationRecord> records = medicationRecordMapper.getAllMedicationRecords();
-        fillExtraInfo(records);
-        return records;
+        Long userId = SecurityUtils.getUserId();
+        String role = iSysRoleService.selectStringRoleByUserId(userId);
+        if (role.equalsIgnoreCase("patient")){
+            List<MedicationRecord> medicationRecordsByPatientId = medicationRecordMapper.getMedicationRecordsByPatientId(userId);
+            fillExtraInfo(medicationRecordsByPatientId);
+            return medicationRecordsByPatientId;
+        } else {
+            List<MedicationRecord> records = medicationRecordMapper.getAllMedicationRecords();
+            fillExtraInfo(records);
+            return records;
+        }
     }
 
     /**

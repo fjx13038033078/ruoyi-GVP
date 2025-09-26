@@ -25,6 +25,14 @@ public interface PatientService {
     Patient getPatientById(Long id);
 
     /**
+     * 根据用户ID获取患者
+     *
+     * @param userId 用户ID
+     * @return 患者信息
+     */
+    Patient getPatientByUserId(Long userId);
+
+    /**
      * 添加患者
      *
      * @param patient 待添加的患者

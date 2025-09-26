@@ -41,6 +41,11 @@
             {{ formatDate(scope.row.occurTime) }}
           </template>
         </el-table-column>
+        <el-table-column label="责任医师" prop="doctorName" align="center" min-width="120">
+          <template slot-scope="scope">
+            {{ getDoctorName(scope.row.doctorId) }}
+          </template>
+        </el-table-column>
         <el-table-column label="医生确认" prop="doctorConfirmed" align="center" width="100">
           <template slot-scope="scope">
             <el-tag :type="scope.row.doctorConfirmed === 1 ? 'success' : 'warning'">
@@ -150,6 +155,7 @@ import {
 } from '@/api/patient/adverseReaction'
 import {listAllPatients} from '@/api/patient/patient'
 import {listAllDrugs} from '@/api/patient/drug'
+import {doctorList} from '@/api/system/user'
 
 export default {
   data() {
@@ -158,6 +164,7 @@ export default {
       adverseReactionList: [],
       patientOptions: [], // 患者下拉选项
       drugOptions: [], // 药品下拉选项
+      doctorOptions: [], // 医生下拉选项
       dialogVisible: false,
       dialogTitle: '',
       dialogButtonText: '',
@@ -199,9 +206,14 @@ export default {
     }
   },
   created() {
-    this.fetchAdverseReactions()
-    this.fetchPatientOptions()
-    this.fetchDrugOptions()
+    // 先加载基础数据，再加载不良反应列表
+    Promise.all([
+      this.fetchPatientOptions(),
+      this.fetchDrugOptions(),
+      this.fetchDoctorOptions()
+    ]).then(() => {
+      this.fetchAdverseReactions()
+    })
   },
   methods: {
     fetchAdverseReactions() {
@@ -215,7 +227,7 @@ export default {
       })
     },
     fetchPatientOptions() {
-      listAllPatients({pageNum: 1, pageSize: 1000}).then(response => {
+      return listAllPatients({pageNum: 1, pageSize: 1000}).then(response => {
         this.patientOptions = response.rows.map(patient => ({
           id: patient.userId,
           patientName: patient.patientName || `患者${patient.id}`,
@@ -224,10 +236,18 @@ export default {
       })
     },
     fetchDrugOptions() {
-      listAllDrugs({pageNum: 1, pageSize: 1000}).then(response => {
+      return listAllDrugs({pageNum: 1, pageSize: 1000}).then(response => {
         this.drugOptions = response.rows.map(drug => ({
           id: drug.id,
           drugName: drug.drugName
+        }))
+      })
+    },
+    fetchDoctorOptions() {
+      return doctorList({pageNum: 1, pageSize: 1000}).then(response => {
+        this.doctorOptions = response.rows.map(doctor => ({
+          userId: doctor.userId,
+          nickName: doctor.nickName
         }))
       })
     },
@@ -240,6 +260,11 @@ export default {
       if (!drugId) return '-'
       const drug = this.drugOptions.find(d => d.id === drugId)
       return drug ? drug.drugName : `药品ID: ${drugId}`
+    },
+    getDoctorName(doctorId) {
+      if (!doctorId) return '-'
+      const doctor = this.doctorOptions.find(d => d.userId === doctorId)
+      return doctor ? doctor.nickName : (this.doctorOptions.length === 0 ? '加载中...' : `医生ID: ${doctorId}`)
     },
     getSeverityType(severity) {
       switch (severity) {
@@ -298,9 +323,6 @@ export default {
         updateDoctorConfirmed(confirmData).then(() => {
           this.$message.success('医生确认成功')
           this.fetchAdverseReactions()
-        }).catch(error => {
-          console.error('医生确认失败:', error)
-          this.$message.error('医生确认失败，请重试')
         })
       })
     },

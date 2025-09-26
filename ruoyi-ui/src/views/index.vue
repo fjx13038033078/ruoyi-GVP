@@ -36,7 +36,7 @@
         </el-col>
         <el-col :span="12">
           <el-card style="margin-right: 20px; height: 420px;">
-            <h3 slot="header">校外链接</h3>
+            <h3 slot="header">健康小贴士</h3>
             <el-carousel :interval="5000" arrow="always">
               <el-carousel-item>
                 <a href="https://www.baidu.com" target="_blank">
@@ -57,20 +57,20 @@
           </el-card>
         </el-col>
       </el-row>
-      <el-row style="margin-top: 20px;">
-        <el-col :span="12">
-          <el-card style="margin-right: 20px; height: 420px;">
-            <h3 slot="header">学科挂科率</h3>
-            <div id="failureRateChart" style="height: 300px;"></div> <!-- echarts 柱状图 -->
-          </el-card>
-        </el-col>
-        <el-col :span="12">
-          <el-card style="margin-right: 20px; height: 420px;">
-            <h3 slot="header">学科平均分</h3>
-            <div id="averageScoreChart" style="height: 300px;"></div> <!-- echarts 柱状图 -->
-          </el-card>
-        </el-col>
-      </el-row>
+<!--      <el-row style="margin-top: 20px;">-->
+<!--        <el-col :span="12">-->
+<!--          <el-card style="margin-right: 20px; height: 420px;">-->
+<!--            <h3 slot="header">学科挂科率</h3>-->
+<!--            <div id="failureRateChart" style="height: 300px;"></div> &lt;!&ndash; echarts 柱状图 &ndash;&gt;-->
+<!--          </el-card>-->
+<!--        </el-col>-->
+<!--        <el-col :span="12">-->
+<!--          <el-card style="margin-right: 20px; height: 420px;">-->
+<!--            <h3 slot="header">学科平均分</h3>-->
+<!--            <div id="averageScoreChart" style="height: 300px;"></div> &lt;!&ndash; echarts 柱状图 &ndash;&gt;-->
+<!--          </el-card>-->
+<!--        </el-col>-->
+<!--      </el-row>-->
       <!-- 弹出的公告内容卡片 -->
       <el-dialog :title="selectedNotice.title" :visible.sync="showNoticeDialog" width="780px" append-to-body>
         <div slot="title" style="text-align: center;">{{ selectedNotice.title }}</div>
@@ -83,7 +83,6 @@
 import {listNotice, getNotice} from "@/api/system/notice";
 import * as echarts from 'echarts'
 import {parseTime} from "../utils/ruoyi";
-import {getAverageScoreByCourse, getFailureRateByCourse} from "@/api/student/grade";
 
 
 export default {
@@ -141,8 +140,6 @@ export default {
     this.getList();
   },
   mounted() {
-    this.initFailureRateByCourse();
-    this.initAverageScoreByCourse();
     this.initEchartsText();
   },
   methods: {
@@ -165,26 +162,7 @@ export default {
         this.loading = false;
       });
     },
-    fetchFailureRateCountMap() {
-      getFailureRateByCourse().then(response => {
-        this.failureRateByCourseData = response.data;
-        this.updateFailureRateChart(); // 获取到数据后更新图表
-      });
-    },
-    fetchAverageScoreByCourse() {
-      getAverageScoreByCourse().then(response => {
-        this.averageScoreByCourseData = response.data;
-        this.updateAverageScoreChart(); // 获取到数据后更新图表
-      });
-    },
-    initFailureRateByCourse() {
-      this.failureRateChart = echarts.init(document.getElementById("failureRateChart"));
-      this.fetchFailureRateCountMap();
-    },
-    initAverageScoreByCourse(){
-      this.averageScoreChart = echarts.init(document.getElementById("averageScoreChart"));
-      this.fetchAverageScoreByCourse();
-    },
+
     // 初始化 ECharts 动画文本
     initEchartsText() {
       const chartDom = this.$refs.echartsText;
@@ -238,44 +216,6 @@ export default {
       };
       myChart.setOption(option);
     },
-    updateFailureRateChart() {
-      const courseNames = Object.keys(this.failureRateByCourseData);
-      const failureRate = Object.values(this.failureRateByCourseData);
-      const option = {
-        // echarts 配置项
-        xAxis: {
-          type: "category",
-          data: courseNames
-        },
-        yAxis: {
-          type: "value"
-        },
-        series: [{
-          data: failureRate,
-          type: "bar"
-        }]
-      };
-      this.failureRateChart.setOption(option);
-    },
-    updateAverageScoreChart(){
-      const courseNames = Object.keys(this.averageScoreByCourseData);
-      const averageScore = Object.values(this.averageScoreByCourseData);
-      const option = {
-        // echarts 配置项
-        xAxis: {
-          type: "category",
-          data: courseNames
-        },
-        yAxis: {
-          type: "value"
-        },
-        series: [{
-          data: averageScore,
-          type: "bar"
-        }]
-      };
-      this.averageScoreChart.setOption(option);
-    }
   }
 };
 </script>

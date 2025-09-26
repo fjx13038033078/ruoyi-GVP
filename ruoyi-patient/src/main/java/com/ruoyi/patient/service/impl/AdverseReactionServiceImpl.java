@@ -1,10 +1,14 @@
 package com.ruoyi.patient.service.impl;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.patient.domain.AdverseReaction;
 import com.ruoyi.patient.domain.Drug;
+import com.ruoyi.patient.domain.Patient;
 import com.ruoyi.patient.mapper.AdverseReactionMapper;
 import com.ruoyi.patient.service.AdverseReactionService;
 import com.ruoyi.patient.service.DrugService;
+import com.ruoyi.patient.service.PatientService;
+import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +30,27 @@ public class AdverseReactionServiceImpl  implements AdverseReactionService {
 
     private final ISysUserService sysUserService;
 
+    private final PatientService patientService;
+
+    private final ISysRoleService iSysRoleService;
+
     @Override
     public List<AdverseReaction> getAllAdverseReactions() {
-        List<AdverseReaction> reactions = adverseReactionMapper.getAllAdverseReactions();
-        fillExtraInfo(reactions);
-        return reactions;
+        Long userId = SecurityUtils.getUserId();
+        String role = iSysRoleService.selectStringRoleByUserId(userId);
+        if (role.equalsIgnoreCase("admin") ){
+            List<AdverseReaction> reactions = adverseReactionMapper.getAllAdverseReactions();
+            fillExtraInfo(reactions);
+            return reactions;
+        } else if (role.equalsIgnoreCase("doctor")) {
+            List<AdverseReaction> adverseReactionsByDoctorId = adverseReactionMapper.getAdverseReactionsByDoctorId(userId);
+            fillExtraInfo(adverseReactionsByDoctorId);
+            return adverseReactionsByDoctorId;
+        } else {
+            List<AdverseReaction> adverseReactionsByPatientId = adverseReactionMapper.getAdverseReactionsByPatientId(userId);
+            fillExtraInfo(adverseReactionsByPatientId);
+            return adverseReactionsByPatientId;
+        }
     }
 
     @Override
@@ -57,6 +77,9 @@ public class AdverseReactionServiceImpl  implements AdverseReactionService {
     @Override
     public boolean addAdverseReaction(AdverseReaction adverseReaction) {
         adverseReaction.setDoctorConfirmed(0);
+        Long patientId = adverseReaction.getPatientId();
+        Patient patientByUserId = patientService.getPatientByUserId(patientId);
+        adverseReaction.setDoctorId(patientByUserId.getDoctorId());
         int rows = adverseReactionMapper.addAdverseReaction(adverseReaction);
         return rows > 0;
     }
@@ -104,5 +127,6 @@ public class AdverseReactionServiceImpl  implements AdverseReactionService {
         reaction.setDrugName(drugById.getDrugName());
         // 填充患者姓名
         reaction.setPatientName(sysUserService.selectUserById(reaction.getPatientId()).getNickName());
+        reaction.setDoctorName(sysUserService.selectUserById(reaction.getDoctorId()).getNickName());
     }
 }

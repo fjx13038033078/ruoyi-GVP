@@ -39,6 +39,17 @@ public class AdverseReaction implements Serializable {
     private Long drugId;
 
     /**
+     * 医生ID
+     */
+    private Long doctorId;
+
+    /**
+     * 医生姓名
+     */
+    @TableField(exist = false)
+    private String doctorName;
+
+    /**
      * 患者姓名
      */
     @TableField(exist = false)
